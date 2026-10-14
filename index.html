@@ -45,7 +45,7 @@
               แบบประเมิน RAPP & REBA
             </h1>
             <span class="hidden sm:inline-block bg-indigo-500/30 text-indigo-200 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-indigo-400/30">
-              v4.3
+              v5.0
             </span>
           </div>
           <p class="text-xs text-indigo-200/80 font-light flex items-center mt-0.5">
@@ -58,7 +58,7 @@
       <!-- Header Action Buttons -->
       <div class="flex items-center space-x-2">
         <!-- ปุ่มเปิดเต็มจอ -->
-        <button type="button" onclick="toggleFullScreen()" title="ขยายเต็มจอ" class="inline-flex items-center px-3 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 active:scale-95 text-white text-xs sm:text-sm font-medium rounded-xl border border-indigo-400/30 backdrop-blur-md transition duration-200 cursor-pointer shadow-sm group">
+        <button type="button" onclick="toggleFullScreen()" title="ขยายเต็มจอ" class="inline-flex items-center px-3.5 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 active:scale-95 text-white text-xs sm:text-sm font-medium rounded-xl border border-indigo-400/30 backdrop-blur-md transition duration-200 cursor-pointer shadow-sm group">
           <i class="fa-solid fa-expand mr-1.5 text-indigo-300 group-hover:text-white transition-colors"></i> เต็มจอ
         </button>
 
@@ -420,18 +420,21 @@
   </main>
 
   <script>
+    // URL Web App ของ Google Apps Script สำหรับรับส่งข้อมูลบันทึกลง Sheet
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrfVvQG07ZSrBxU-qTRbgipqmw1kzoXnHb_DGCFPdVbkTDvPtbI2mh5CY7-4rC5t1Ljw/exec";
+
     let currentMode = 'RAPP';
     let currentCategory = 'small';
     let currentStep = 0;
     let totalSteps = 11;
     let userAnswers = {};
 
-    // --- ฟังก์ชันปุ่มเปิดเต็มจอ ---
+    // ฟังก์ชันปุ่มเปิดเต็มจอ
     function toggleFullScreen() {
       if (!document.fullscreenElement && !document.webkitFullscreenElement) {
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen().catch(err => {
-            alert("เบราว์เซอร์หรือการฝังหน้านี้ไม่อนุญาตให้ใช้โหมด Fullscreen");
+            alert("เบราว์เซอร์หรือระบบฝังหน้านี้ไม่อนุญาตให้ใช้โหมด Fullscreen");
           });
         } else if (document.documentElement.webkitRequestFullscreen) {
           document.documentElement.webkitRequestFullscreen();
@@ -1107,6 +1110,34 @@
       showPage('result-page');
     }
 
+    function sendDataToSheet(payload) {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            renderResultPage(payload);
+          })
+          .withFailureHandler(function(err) {
+            sendViaFetch(payload);
+          })
+          .saveAssessment(payload);
+      } else {
+        sendViaFetch(payload);
+      }
+    }
+
+    function sendViaFetch(payload) {
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        renderResultPage(payload);
+      }).catch(err => {
+        renderResultPage(payload);
+      });
+    }
+
     function nextQuestion() {
       if (currentStep < totalSteps - 1) {
         currentStep++;
@@ -1126,6 +1157,7 @@
         const payload = {
           mode: currentMode,
           evaluatorName: name,
+          evaluatorDate: document.getElementById('evaluator-date').value,
           location: document.getElementById('evaluator-location').value.trim(),
           jobDetail: document.getElementById('evaluator-job').value.trim(),
           equipmentType: subTypeTitle,
@@ -1135,18 +1167,7 @@
           recommendation: evalResult.recommendation
         };
 
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler(function(res) {
-              renderResultPage(payload);
-            })
-            .withFailureHandler(function(err) {
-              renderResultPage(payload);
-            })
-            .saveAssessment(payload);
-        } else {
-          renderResultPage(payload);
-        }
+        sendDataToSheet(payload);
       }
     }
 
