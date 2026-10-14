@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบประเมิน RAPP & REBA</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts Prompt -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { font-family: 'Prompt', sans-serif; }
+    body { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+    .option-card { transition: all 0.2s ease-in-out; }
+    .option-card:has(input[type="radio"]:checked) {
+      border-color: #6366f1;
+      background-color: #eef2ff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+      transform: scale(1.005);
+    }
+    @media print {
+      header, button, .no-print { display: none !important; }
+      body { background: white !important; }
+      #result-page { display: block !important; border: none !important; shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header Banner -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white sticky top-0 z-50 border-b border-indigo-900/50 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      
+      <!-- Brand & Logo -->
+      <div class="flex items-center space-x-4">
+        <div class="bg-white p-1 rounded-2xl shadow-md w-14 h-14 flex items-center justify-center shrink-0 border border-white/20 overflow-hidden">
+          <span class="text-[9px] font-extrabold text-orange-600 leading-tight text-center">มหาวิทยาลัย<br>นเรศวร</span>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-xl sm:text-2xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-indigo-200">
+              แบบประเมิน RAPP & REBA
+            </h1>
+            <span class="hidden sm:inline-block bg-indigo-500/30 text-indigo-200 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-indigo-400/30">
+              v4.3
+            </span>
+          </div>
+          <p class="text-xs text-indigo-200/80 font-light flex items-center mt-0.5">
+            <i class="fa-solid fa-graduation-cap mr-1.5 text-indigo-400"></i>
+            คณะสาธารณสุขศาสตร์ มหาวิทยาลัยนเรศวร
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <!-- ปุ่มเปิดเต็มจอ -->
+        <button type="button" onclick="toggleFullScreen()" title="ขยายเต็มจอ" class="inline-flex items-center px-3 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 active:scale-95 text-white text-xs sm:text-sm font-medium rounded-xl border border-indigo-400/30 backdrop-blur-md transition duration-200 cursor-pointer shadow-sm group">
+          <i class="fa-solid fa-expand mr-1.5 text-indigo-300 group-hover:text-white transition-colors"></i> เต็มจอ
+        </button>
+
+        <!-- ปุ่มกลับหน้าแรก -->
+        <button type="button" onclick="goHome()" class="inline-flex items-center px-3.5 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 active:scale-95 text-white text-xs sm:text-sm font-medium rounded-xl border border-indigo-400/30 backdrop-blur-md transition duration-200 cursor-pointer shadow-sm group">
+          <i class="fa-solid fa-house mr-1.5 text-indigo-300 group-hover:text-white transition-colors"></i> หน้าแรก
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="max-w-6xl mx-auto my-8 px-4 sm:px-6 w-full flex-1">
+
+    <!-- PAGE 0: Landing Page -->
+    <div id="landing-page" class="space-y-8 my-auto py-6">
+      <div class="text-center space-y-2 max-w-2xl mx-auto">
+        <span class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-200/80">
+          <i class="fa-solid fa-shield-halved mr-1.5 text-indigo-600"></i> ระบบประเมินความเสี่ยงการทำงานด้านการเหมาะกับงาน
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">แบบประเมิน RAPP & REBA</h2>
+        <p class="text-sm text-slate-500">กรุณาเลือกประเภทแบบประเมินที่ต้องการเพื่อเริ่มต้นใช้งาน</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto pt-4">
+        <button type="button" onclick="showPage('rapp-menu-page')" class="group relative bg-white rounded-3xl p-8 sm:p-10 border-2 border-slate-200/80 hover:border-amber-500/80 shadow-md hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 text-left cursor-pointer flex flex-col justify-between hover:-translate-y-1.5 min-h-[260px]">
+          <div class="space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-2xl flex items-center justify-center text-3xl shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-dolly"></i>
+            </div>
+            <div>
+              <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">Pushing & Pulling</span>
+              <h3 class="text-2xl font-bold text-slate-900 mt-2 group-hover:text-amber-600 transition-colors">RAPP</h3>
+              <p class="text-xs text-slate-500 mt-1">Risk Assessment of Pushing and Pulling (ประเมินความเสี่ยงจากการผลักหรือดึงวัตถุ)</p>
+            </div>
+          </div>
+          <div class="flex items-center text-amber-600 text-sm font-semibold pt-6">
+            <span>เข้าสู่แบบประเมิน RAPP</span>
+            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+          </div>
+        </button>
+
+        <button type="button" onclick="startAssessment('REBA', 'Rapid Entire Body Assessment', 'reba')" class="group relative bg-white rounded-3xl p-8 sm:p-10 border-2 border-slate-200/80 hover:border-indigo-500/80 shadow-md hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 text-left cursor-pointer flex flex-col justify-between hover:-translate-y-1.5 min-h-[260px]">
+          <div class="space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 text-white rounded-2xl flex items-center justify-center text-3xl shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-child-reaching"></i>
+            </div>
+            <div>
+              <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">Entire Body</span>
+              <h3 class="text-2xl font-bold text-slate-900 mt-2 group-hover:text-indigo-600 transition-colors">REBA</h3>
+              <p class="text-xs text-slate-500 mt-1">Rapid Entire Body Assessment (ประเมินท่าทางการทำงานของร่างกายสุทธิ)</p>
+            </div>
+          </div>
+          <div class="flex items-center text-indigo-600 text-sm font-semibold pt-6">
+            <span>เริ่มการประเมิน REBA (20 ขั้นตอน)</span>
+            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE 1: RAPP Subcategories -->
+    <div id="rapp-menu-page" class="hidden space-y-6">
+      <div class="flex items-center justify-between bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200/80">
+        <div class="flex items-center space-x-3">
+          <button type="button" onclick="showPage('landing-page')" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">1. แบบประเมิน RAPP</h2>
+            <p class="text-xs text-slate-500">เลือกประเภทวัตถุหรือรูปแบบการเคลื่อนย้ายวัตถุ</p>
+          </div>
+        </div>
+        <span class="hidden sm:inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full border border-amber-200/80">
+          Pushing & Pulling Assessment
+        </span>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 space-y-8">
+        <!-- Group 1: วัตถุที่มีล้อ -->
+        <div class="space-y-4">
+          <div class="flex items-center text-amber-700 font-bold text-sm tracking-wide uppercase">
+            <span class="w-2.5 h-2.5 bg-amber-500 rounded-full mr-2.5 shadow-sm"></span>
+            <span>วัตถุที่มีล้อ (WHEELED EQUIPMENT)</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button type="button" onclick="startAssessment('RAPP', 'วัตถุที่มีล้อ - อุปกรณ์ขนาดเล็ก', 'small')" class="flex items-center justify-between bg-slate-50 hover:bg-amber-50/70 hover:border-amber-300 text-slate-700 p-4 rounded-2xl border border-slate-200/80 transition group cursor-pointer">
+              <span class="flex items-center text-sm font-medium">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center mr-3 shadow-xs border border-slate-200/60 group-hover:border-amber-300">
+                  <i class="fa-solid fa-box-archive text-amber-600 text-sm"></i>
+                </div>
+                อุปกรณ์ขนาดเล็ก (Small Equipment)
+              </span>
+              <i class="fa-solid fa-arrow-right-long text-xs text-slate-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <button type="button" onclick="startAssessment('RAPP', 'วัตถุที่มีล้อ - อุปกรณ์ขนาดกลาง', 'medium')" class="flex items-center justify-between bg-slate-50 hover:bg-amber-50/70 hover:border-amber-300 text-slate-700 p-4 rounded-2xl border border-slate-200/80 transition group cursor-pointer">
+              <span class="flex items-center text-sm font-medium">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center mr-3 shadow-xs border border-slate-200/60 group-hover:border-amber-300">
+                  <i class="fa-solid fa-dolly text-amber-600 text-sm"></i>
+                </div>
+                อุปกรณ์ขนาดกลาง (Medium Equipment)
+              </span>
+              <i class="fa-solid fa-arrow-right-long text-xs text-slate-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <button type="button" onclick="startAssessment('RAPP', 'วัตถุที่มีล้อ - อุปกรณ์ขนาดใหญ่', 'large')" class="flex items-center justify-between bg-slate-50 hover:bg-amber-50/70 hover:border-amber-300 text-slate-700 p-4 rounded-2xl border border-slate-200/80 transition group cursor-pointer">
+              <span class="flex items-center text-sm font-medium">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center mr-3 shadow-xs border border-slate-200/60 group-hover:border-amber-300">
+                  <i class="fa-solid fa-truck-front text-amber-600 text-sm"></i>
+                </div>
+                อุปกรณ์ขนาดใหญ่ (Large Equipment)
+              </span>
+              <i class="fa-solid fa-arrow-right-long text-xs text-slate-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Group 2: วัตถุที่ไม่มีล้อ -->
+        <div class="space-y-4">
+          <div class="flex items-center text-orange-700 font-bold text-sm tracking-wide uppercase">
+            <span class="w-2.5 h-2.5 bg-orange-500 rounded-full mr-2.5 shadow-sm"></span>
+            <span>วัตถุที่ไม่มีล้อ (UNWHEELED OBJECTS)</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button type="button" onclick="startAssessment('RAPP', 'วัตถุที่ไม่มีล้อ - การกลิ้ง', 'rolling')" class="flex items-center justify-between bg-slate-50 hover:bg-orange-50/70 hover:border-orange-300 text-slate-700 p-4 rounded-2xl border border-slate-200/80 transition group cursor-pointer">
+              <span class="flex items-center text-sm font-medium">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center mr-3 shadow-xs border border-slate-200/60 group-hover:border-orange-300">
+                  <i class="fa-solid fa-rotate text-orange-600 text-sm"></i>
+                </div>
+                การกลิ้ง (Rolling)
+              </span>
+              <i class="fa-solid fa-arrow-right-long text-xs text-slate-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <button type="button" onclick="startAssessment('RAPP', 'วัตถุที่ไม่มีล้อ - การหมุน', 'pivoting')" class="flex items-center justify-between bg-slate-50 hover:bg-orange-50/70 hover:border-orange-300 text-slate-700 p-4 rounded-2xl border border-slate-200/80 transition group cursor-pointer">
+              <span class="flex items-center text-sm font-medium">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center mr-3 shadow-xs border border-slate-200/60 group-hover:border-orange-300">
+                  <i class="fa-solid fa-arrows-spin text-orange-600 text-sm"></i>
+                </div>
+                การหมุน (Pivoting)
+              </span>
+              <i class="fa-solid fa-arrow-right-long text-xs text-slate-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <button type="button" onclick="startAssessment('RAPP', 'วัตถุที่ไม่มีล้อ - การลาก/เลื่อน', 'dragging')" class="flex items-center justify-between bg-slate-50 hover:bg-orange-50/70 hover:border-orange-300 text-slate-700 p-4 rounded-2xl border border-slate-200/80 transition group cursor-pointer">
+              <span class="flex items-center text-sm font-medium">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center mr-3 shadow-xs border border-slate-200/60 group-hover:border-orange-300">
+                  <i class="fa-solid fa-arrows-left-right-to-line text-orange-600 text-sm"></i>
+                </div>
+                การลาก/เลื่อน (Dragging/Sliding)
+              </span>
+              <i class="fa-solid fa-arrow-right-long text-xs text-slate-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: Questionnaire -->
+    <div id="assessment-page" class="hidden max-w-4xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80 transition-all">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-slate-100 gap-3">
+        <div>
+          <h2 id="quiz-main-title" class="text-2xl font-bold text-slate-900">แบบประเมิน RAPP</h2>
+          <p class="text-xs text-slate-500 mt-0.5">กรุณากรอกข้อมูลและเลือกคำตอบตามความเป็นจริง</p>
+        </div>
+        <span id="quiz-sub-type" class="text-xs font-semibold text-indigo-700 bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-200/80 shadow-2xs">
+          วัตถุที่มีล้อ - อุปกรณ์ขนาดเล็ก
+        </span>
+      </div>
+
+      <div class="bg-slate-50/90 rounded-2xl p-5 border border-slate-200/80 mb-6 space-y-4">
+        <div class="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <i class="fa-solid fa-user-pen text-indigo-600"></i>
+          <span>ข้อมูลทั่วไปของผู้รับการประเมิน</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">ชื่อผู้ประเมิน <span class="text-rose-500">*</span></label>
+            <input type="text" id="evaluator-name" placeholder="ระบุชื่อ-นามสกุล" class="w-full text-sm px-3.5 py-2.5 bg-white border border-slate-300/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition shadow-2xs">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">วันที่ประเมิน</label>
+            <input type="date" id="evaluator-date" class="w-full text-sm px-3.5 py-2.5 bg-white border border-slate-300/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition shadow-2xs">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">สถานที่ / แผนกงาน</label>
+            <input type="text" id="evaluator-location" placeholder="เช่น คลังสินค้า / แผนกจัดส่ง" class="w-full text-sm px-3.5 py-2.5 bg-white border border-slate-300/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition shadow-2xs">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">รายละเอียดงานที่ประเมิน</label>
+          <input type="text" id="evaluator-job" placeholder="เช่น เข็นรถเข็นย้ายวัตถุดิบไปยังไลน์ผลิต" class="w-full text-sm px-3.5 py-2.5 bg-white border border-slate-300/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition shadow-2xs">
+        </div>
+      </div>
+
+      <div class="mb-6 space-y-2">
+        <div class="flex justify-between items-center text-xs font-semibold">
+          <span id="progress-text" class="text-slate-600">ข้อที่ 1 จาก 11</span>
+          <span id="progress-percent" class="text-indigo-600 font-bold">9%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200/60 shadow-inner">
+          <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 h-2 rounded-full transition-all duration-300 w-[9%]"></div>
+        </div>
+      </div>
+
+      <div class="border-2 border-indigo-500/60 rounded-3xl p-6 mb-8 bg-white shadow-sm space-y-4">
+        <div class="flex items-start space-x-3">
+          <span id="q-number" class="w-8 h-8 bg-indigo-600 text-white text-xs font-bold rounded-2xl flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20">
+            1
+          </span>
+          <h3 id="q-title" class="text-base sm:text-lg font-bold text-slate-800 leading-snug pt-1">
+            ข้อที่ 1: น้ำหนักของวัตถุ/อุปกรณ์ (Weight)
+          </h3>
+        </div>
+
+        <div class="bg-sky-50 text-sky-800 border border-sky-100 text-xs px-4 py-3 rounded-2xl flex items-center space-x-2">
+          <i class="fa-solid fa-circle-info text-sky-500 text-sm shrink-0"></i>
+          <span>คลิกเลือกคำตอบที่ตรงกับสภาพงานจริง แล้วกดปุ่ม "ถัดไป" ด้านล่าง</span>
+        </div>
+
+        <div id="options-container" class="space-y-3 pt-2"></div>
+      </div>
+
+      <div class="flex justify-between items-center pt-2">
+        <button type="button" id="btn-prev" onclick="prevQuestion()" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium text-sm rounded-xl transition flex items-center disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-left mr-2 text-xs"></i> ย้อนกลับ
+        </button>
+
+        <button type="button" id="btn-next" onclick="nextQuestion()" class="px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer">
+          <span>ถัดไป</span> <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE 3: RESULT SUMMARY PAGE -->
+    <div id="result-page" class="hidden max-w-4xl mx-auto space-y-6">
+      
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="flex items-center space-x-5">
+          <div class="w-16 h-16 bg-white/20 border border-white/30 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-inner">
+            <i class="fa-solid fa-circle-check text-white"></i>
+          </div>
+          <div>
+            <span class="inline-block bg-white/20 text-emerald-100 text-[11px] font-semibold px-3 py-0.5 rounded-full mb-1 border border-white/20">
+              บันทึกเรียบร้อยแล้ว
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">ประมวลผลและบันทึกสำเร็จ!</h2>
+            <p class="text-xs sm:text-sm text-emerald-100/90 font-light mt-1">ระบบได้ทำการวิเคราะห์ผลประเมินและจัดเก็บลง Google Sheet เรียบร้อยแล้ว</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80 space-y-8">
+        
+        <!-- ข้อมูลทั่วไป -->
+        <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200/80 space-y-4">
+          <div class="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200/60 pb-3">
+            <i class="fa-solid fa-clipboard-user text-indigo-600"></i>
+            <span>ข้อมูลการประเมิน</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-xs text-slate-500 block">ผู้ประเมิน:</span>
+              <span id="res-evaluator-name" class="font-semibold text-slate-900">-</span>
+            </div>
+            <div>
+              <span class="text-xs text-slate-500 block">ประเภทการประเมิน:</span>
+              <span id="res-category-type" class="font-semibold text-slate-900">-</span>
+            </div>
+            <div>
+              <span class="text-xs text-slate-500 block">วันที่ประเมิน:</span>
+              <span id="res-evaluator-date" class="font-semibold text-slate-900">-</span>
+            </div>
+            <div>
+              <span class="text-xs text-slate-500 block">สถานที่ / แผนกงาน:</span>
+              <span id="res-evaluator-location" class="font-semibold text-slate-900">-</span>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="text-xs text-slate-500 block">รายละเอียดงานที่ประเมิน:</span>
+              <span id="res-evaluator-job" class="font-semibold text-slate-900">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- REBA / RAPP Interpretation Table -->
+        <div id="res-reba-table-container" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-slate-800">การแปลผลคะแนน</span>
+            <span class="text-xs text-slate-500">ตารางเกณฑ์ระดับความเสี่ยง</span>
+          </div>
+
+          <table class="w-full text-sm border-collapse border border-slate-900 text-left bg-white rounded-lg overflow-hidden">
+            <thead>
+              <tr class="bg-amber-100/80 text-slate-900 font-bold border-b border-slate-900">
+                <th class="p-2.5 border-r border-slate-900 w-24 text-center">คะแนน</th>
+                <th class="p-2.5">การแปลผล</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-300 font-medium text-slate-800">
+              <tr><td class="p-2.5 text-center border-r border-slate-900 font-semibold">1</td><td class="p-2.5">ความเสี่ยงน้อยมาก</td></tr>
+              <tr><td class="p-2.5 text-center border-r border-slate-900 font-semibold">2-3</td><td class="p-2.5">ความเสี่ยงน้อย ยังต้องมีการปรับปรุง</td></tr>
+              <tr><td class="p-2.5 text-center border-r border-slate-900 font-semibold">4-7</td><td class="p-2.5">ความเสี่ยงปานกลาง ควรวิเคราะห์เพิ่มเติมและควรได้รับการปรับปรุง</td></tr>
+              <tr><td class="p-2.5 text-center border-r border-slate-900 font-semibold">8-10</td><td class="p-2.5">ความเสี่ยงสูง ควรวิเคราะห์เพิ่มเติมและควรรีบปรับปรุง</td></tr>
+              <tr><td class="p-2.5 text-center border-r border-slate-900 font-semibold">≥11</td><td class="p-2.5">ความเสี่ยงสูงมาก ควรปรับปรุงทันที</td></tr>
+            </tbody>
+          </table>
+
+          <!-- Reba Highlight Bar (Yellow/Black) -->
+          <div class="flex flex-col sm:flex-row items-stretch border-2 border-slate-900 rounded-lg overflow-hidden shadow-sm font-bold text-sm sm:text-base">
+            <div class="bg-white text-slate-900 px-4 py-3 flex items-center justify-center border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 font-extrabold whitespace-nowrap">
+              คะแนนรวมของ REBA
+            </div>
+            <div id="res-yellow-score" class="bg-yellow-300 text-slate-950 px-6 py-3 flex items-center justify-center text-xl font-black border-b-2 sm:border-b-0 sm:border-r-2 border-slate-900 sm:w-28">
+              12
+            </div>
+            <div id="res-yellow-text" class="bg-white text-slate-900 px-4 py-3 flex-1 flex items-center">
+              ความเสี่ยงสูงมาก ควรปรับปรุงทันที
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommendations Box -->
+        <div class="bg-slate-50 border border-slate-300 rounded-2xl p-6 space-y-3">
+          <div class="text-slate-900 font-bold text-sm border-b border-slate-200 pb-2">
+            คำแนะนำเพื่อการปรับปรุงหรือแก้ไขท่าทางการทำงานที่มีความเสี่ยง
+          </div>
+          <p id="res-recommendation-text" class="text-sm text-slate-800 leading-relaxed font-medium">
+            -
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-slate-100 no-print">
+          <button type="button" onclick="goHome()" class="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition flex items-center justify-center cursor-pointer">
+            <i class="fa-solid fa-house mr-2"></i> กลับสู่หน้าแรก
+          </button>
+
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <button type="button" onclick="window.print()" class="w-full sm:w-auto px-6 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium text-sm rounded-xl border border-indigo-200 transition flex items-center justify-center cursor-pointer">
+              <i class="fa-solid fa-print mr-2"></i> พิมพ์ / บันทึก PDF
+            </button>
+
+            <button type="button" onclick="showPage('rapp-menu-page')" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition flex items-center justify-center shadow-md shadow-indigo-500/20 cursor-pointer">
+              <i class="fa-solid fa-rotate-left mr-2"></i> ทำการประเมินรายการใหม่
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let currentMode = 'RAPP';
+    let currentCategory = 'small';
+    let currentStep = 0;
+    let totalSteps = 11;
+    let userAnswers = {};
+
+    // --- ฟังก์ชันปุ่มเปิดเต็มจอ ---
+    function toggleFullScreen() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(err => {
+            alert("เบราว์เซอร์หรือการฝังหน้านี้ไม่อนุญาตให้ใช้โหมด Fullscreen");
+          });
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
+    // 1. คำถามสำหรับวัตถุที่มีล้อ (A-2 ถึง A-9)
+    const baseWheeledQuestions = [
+      { title: "ข้อที่ 2: A-2 ท่าทางการทำงาน - ลำตัว (Trunk)", options: [
+        { text: "ลำตัวตั้งตรง", score: 0 },
+        { text: "ลำตัวเอนตามทิศทางการออกแรง", score: 3 },
+        { text: "ลำตัวเอนมาก หรือผู้ปฏิบัติงานต้อง นั่งยอง คุกเข่า หรือใช้หลังดันอุปกรณ์", score: 6 }
+      ]},
+      { title: "ข้อที่ 3: A-2 ท่าทางการทำงาน - การบิดลำตัว (Trunk Twisting)", options: [
+        { text: "ลำตัวไม่บิด", score: 0 },
+        { text: "ลำตัวก้ม หรือบิดเล็กน้อย", score: 3 },
+        { text: "ลำตัวก้ม หรือบิดอย่างมาก", score: 6 }
+      ]},
+      { title: "ข้อที่ 4: A-2 ท่าทางการทำงาน - ตำแหน่งของมือ (Hand Position)", options: [
+        { text: "มืออยู่ระหว่างระดับสะโพกถึงไหล่", score: 0 },
+        { text: "มืออยู่ต่ำกว่าระดับสะโพก", score: 1 },
+        { text: "มืออยู่ด้านหลังลำตัว หรือสูงกว่าระดับไหล่", score: 2 }
+      ]},
+      { title: "ข้อที่ 5: A-3 ลักษณะการจับอุปกรณ์ (Hand Grip)", options: [
+        { text: "ด้ามจับกระชับ พอดีมือ", score: 0 },
+        { text: "จับได้ปานกลาง หรือไม่มีด้ามจับแต่จับตัวอุปกรณ์ได้", score: 1 },
+        { text: "ไม่มีด้ามจับ หรือการจับไม่มั่นคง", score: 2 }
+      ]},
+      { title: "ข้อที่ 6: A-4 รูปแบบการทำงาน (Work Pattern)", options: [
+        { text: "ไม่เป็นงานซ้ำ (น้อยกว่า 5 ครั้งต่อนาที) และผู้ปฏิบัติงานสามารถกำหนดจังหวะการทำงานเองได้", score: 0 },
+        { text: "เป็นงานซ้ำ แต่มีโอกาสพักหรือฟื้นตัวจากการทำงานเช่น การพักตามช่วงเวลาหรือการหมุนเวียนงาน", score: 1 },
+        { text: "เป็นงานซ้ำ และไม่มีช่วงเวลาพักหรือการหมุนเวียนงาน", score: 2 }
+      ]},
+      { title: "ข้อที่ 7: A-5 ระยะทางในการเคลื่อนย้าย (Travel Distance)", options: [
+        { text: "น้อยกว่าหรือเท่ากับ 10 เมตร", score: 0 },
+        { text: "มากกว่า 10 เมตร แต่ไม่เกิน 30 เมตร", score: 1 },
+        { text: "มากกว่า 30 เมตร", score: 2 }
+      ]},
+      { title: "ข้อที่ 8: A-6 สภาพของอุปกรณ์ (Condition of Equipment)", options: [
+        { text: "มีการบำรุงรักษาอุปกรณ์ตามแผนและเชิงป้องกัน อุปกรณ์อยู่ในสภาพดี", score: 0 },
+        { text: "มีการบำรุงรักษาเมื่อเกิดปัญหา หรืออุปกรณ์ในสภาพพอใช้", score: 1 },
+        { text: "ไม่มีระบบการบำรุงรักษาที่ชัดเจน หรืออุปกรณ์อยู่ในสภาพไม่ดี", score: 2 }
+      ]},
+      { title: "ข้อที่ 9: A-7 สภาพพื้นผิวของพื้นที่ทำงาน (Floor Surface)", options: [
+        { text: "พื้นแห้ง สะอาด พื้นเรียบ มีความมั่นคง พื้นไม่ลาดเอียง", score: 0 },
+        { text: "พื้นส่วนใหญ่แห้ง สะอาด พื้นมีความลาดเอียง มั่นคงพอสมควร", score: 1 },
+        { text: "พื้นเปียก มีเศษวัสดุ พื้นลาดเอียงมากกว่า 5 องศา พื้นไม่มั่นคง", score: 2 }
+      ]},
+      { title: "ข้อที่ 10: A-8 สิ่งกีดขวางตามเส้นทาง (Obstacles)", options: [
+        { text: "ไม่มีสิ่งกีดขวางตามเส้นทางการเคลื่อนย้าย", score: 0 },
+        { text: "มีสิ่งกีดขวาง 1 ประเภท แต่ไม่มีบันไดหรือทางลาดชัน", score: 1 },
+        { text: "มีบันได ทางลาดชัน หรือมีสิ่งกีดขวาง ตั้งแต่ 2 ประเภทขึ้นไป", score: 2 }
+      ]},
+      { title: "ข้อที่ 11: A-9 ปัจจัยอื่นๆ (Other Factors)", options: [
+        { text: "ไม่มีปัจจัยอื่นที่ส่งผลต่อการทำงาน", score: 0 },
+        { text: "พบปัจจัยเสี่ยง 1 ปัจจัย", score: 1 },
+        { text: "พบปัจจัยเสี่ยงตั้งแต่ 2 ปัจจัยขึ้นไป", score: 2 }
+      ]}
+    ];
+
+    // 2. คำถามสำหรับวัตถุที่ไม่มีล้อ (B-2 ถึง B-8)
+    const baseUnwheeledQuestions = [
+      { title: "ข้อที่ 2: B-2 ท่าทางการทำงาน - ลำตัว (Trunk)", options: [
+        { text: "ลำตัวตรงเป็นส่วนใหญ่", score: 0 },
+        { text: "ลำตัวเอียงไปในทิศทางของการออกแรง", score: 3 },
+        { text: "ลำตัวเอียงมาก หรือปฏิบัติงานต้องนั่งยองหรือคุกเข่า", score: 6 }
+      ]},
+      { title: "ข้อที่ 3: B-2 ท่าทางการทำงาน - การบิดลำตัว (Trunk Twisting)", options: [
+        { text: "ลำตัวไม่บิด", score: 0 },
+        { text: "ลำตัวมีการก้มงอ หรือบิดเล็กน้อย", score: 3 },
+        { text: "ลำตัวงอหรือบิดอย่างมาก", score: 6 }
+      ]},
+      { title: "ข้อที่ 4: B-2 ท่าทางการทำงาน - ตำแหน่งของมือ (Hand Position)", options: [
+        { text: "มืออยู่ระหว่างระดับสะโพกและไหล่", score: 0 },
+        { text: "มืออยู่ต่ำกว่าระดับสะโพก", score: 1 },
+        { text: "มืออยู่ด้านหลังหรือด้านข้างลำตัวหรือสูงกว่าระดับไหล่", score: 2 }
+      ]},
+      { title: "ข้อที่ 5: B-3 ลักษณะการจับ (Hand Grip)", options: [
+        { text: "มีที่จับหรือบริเวณสำหรับจับที่ช่วยให้สามารถจับได้อย่างมั่นคง", score: 0 },
+        { text: "มีบริเวณสำหรับจับแต่จับได้เพียงบางส่วน", score: 1 },
+        { text: "ไม่มีที่จับหรือการจับไม่มั่นคง", score: 2 }
+      ]},
+      { title: "ข้อที่ 6: B-4 รูปแบบการทำงาน (Work Pattern)", options: [
+        { text: "งานไม่มีลักษณะทำซ้ำ (น้อยกว่า 5 ครั้งต่อนาที)และสามารถกำหนดจังหวะงานตัวเองได้", score: 0 },
+        { text: "งานมีลักษณะซ้ำ แต่มีโอกาสพักฟื้นตัวหรือเวียนงาน", score: 1 },
+        { text: "งานมีลักษณะซ้ำ แต่ไม่มีช่วงพักหรือเวียนงาน", score: 2 }
+      ]},
+      { title: "ข้อที่ 7: B-5 ระยะทางในการเคลื่อนย้าย (Travel Distance)", options: [
+        { text: "2 เมตร หรือน้อยกว่า", score: 0 },
+        { text: "มากกว่า 2 เมตร ถึง 10 เมตร", score: 1 },
+        { text: "มากกว่า 10 เมตร", score: 3 }
+      ]},
+      { title: "ข้อที่ 8: B-6 สภาพพื้นผิวของพื้นที่ทำงาน (Floor Surface)", options: [
+        { text: "พื้นผิวแห้ง เรียบ อยู่ในสภาพดีไม่ขรุขระ", score: 0 },
+        { text: "พื้นส่วนใหญ่แห้ง มีความลาดเอียงเล็กน้อย พื้นมีความขรุขระ", score: 2 },
+        { text: "พื้นเปียก มีความลาดเอียงมาก มีความขรุขระสูง", score: 4 }
+      ]},
+      { title: "ข้อที่ 9: B-7 สิ่งกีดขวางตามเส้นทาง (Obstacles)", options: [
+        { text: "ไม่มีสิ่งกีดขวาง", score: 0 },
+        { text: "มีสิ่งกีดขวาง 1 ประเภทแต่ไม่มีบันไดหรือทางลาดชัน", score: 1 },
+        { text: "มีสิ่งกีดขวาง 2 ประเภทแต่มีบันไดและทางลาดชัน", score: 3 }
+      ]},
+      { title: "ข้อที่ 10: B-8 ปัจจัยอื่นๆ (Other Factors)", options: [
+        { text: "ไม่พบปัจจัยอื่น", score: 0 },
+        { text: "พบปัจจัยที่ส่งผลต่อการทำงาน 1 ปัจจัย", score: 1 },
+        { text: "พบปัจจัยที่ส่งผลต่อการทำงาน ตั้งแต่ 2 ปัจจัยขึ้นไป", score: 2 }
+      ]}
+    ];
+
+    // กำหนดชุดข้อสอบ RAPP ทั้ง 6 ประเภท
+    const questionsRAPP = {
+      small: [
+        { title: "ข้อที่ 1: A-1 น้ำหนักของวัตถุ/อุปกรณ์ (Weight)", options: [
+          { text: "น้อยกว่า 50 Kg", score: 0 },
+          { text: "50 - 100 Kg", score: 2 },
+          { text: "100 - 200 Kg", score: 4 },
+          { text: "มากกว่า 200 Kg", score: 8 }
+        ]},
+        ...baseWheeledQuestions
+      ],
+      medium: [
+        { title: "ข้อที่ 1: A-1 น้ำหนักของวัตถุ/อุปกรณ์ (Weight)", options: [
+          { text: "น้อยกว่า 250 Kg", score: 0 },
+          { text: "250 - 500 Kg", score: 2 },
+          { text: "500 - 750 Kg", score: 4 },
+          { text: "มากกว่า 750 Kg", score: 8 }
+        ]},
+        ...baseWheeledQuestions
+      ],
+      large: [
+        { title: "ข้อที่ 1: A-1 น้ำหนักของวัตถุ/อุปกรณ์ (Weight)", options: [
+          { text: "น้อยกว่า 600 Kg", score: 0 },
+          { text: "600 - 1000 Kg", score: 2 },
+          { text: "1000 - 1500 Kg", score: 4 },
+          { text: "มากกว่า 1500 Kg", score: 8 }
+        ]},
+        ...baseWheeledQuestions
+      ],
+      rolling: [
+        { title: "ข้อที่ 1: B-1 น้ำหนักของวัตถุ (การกลิ้ง)", options: [
+          { text: "น้อยกว่า 400 Kg", score: 0 },
+          { text: "400 - 600 Kg", score: 2 },
+          { text: "600 - 1000 Kg", score: 4 },
+          { text: "มากกว่า 1000 Kg", score: 8 }
+        ]},
+        ...baseUnwheeledQuestions
+      ],
+      pivoting: [
+        { title: "ข้อที่ 1: B-1 น้ำหนักของวัตถุ (การหมุน)", options: [
+          { text: "น้อยกว่า 80 Kg", score: 0 },
+          { text: "80 - 120 Kg", score: 2 },
+          { text: "120 - 150 Kg", score: 4 },
+          { text: "มากกว่า 150 Kg", score: 8 }
+        ]},
+        ...baseUnwheeledQuestions
+      ],
+      dragging: [
+        { title: "ข้อที่ 1: B-1 น้ำหนักของวัตถุ (การลาก/เลื่อน)", options: [
+          { text: "น้อยกว่า 25 Kg", score: 0 },
+          { text: "25 - 50 Kg", score: 2 },
+          { text: "50 - 80 Kg", score: 4 },
+          { text: "มากกว่า 80 Kg", score: 8 }
+        ]},
+        ...baseUnwheeledQuestions
+      ]
+    };
+
+    // 3. กำหนดชุดข้อสอบ REBA ฉบับตรงตามตาราง Google Sheet สมบูรณ์ (ขั้นตอนที่ 1 - 14)
+    const questionsREBA = [
+      // ขั้นตอนที่ 1: คอ (0, 1)
+      { title: "ขั้นตอนที่ 1: การประเมินท่าทางของคอ (Neck Posture)", options: [
+        { text: "ก้มคอ โดยมีมุม 0-20°", score: 1 },
+        { text: "ก้มคอ โดยมีมุมมากกว่า 20°", score: 2 },
+        { text: "เงยคอ (คอแอ่นไปด้านหลัง) มากกว่า 20°", score: 2 }
+      ]},
+      { title: "ขั้นตอนที่ 1: คะแนนปรับเพิ่มของคอ (Neck Adjustment)", options: [
+        { text: "ไม่มีการปรับเพิ่มคะแนน", score: 0 },
+        { text: "กรณีที่มีการหมุนคอ", score: 1 },
+        { text: "กรณีที่มีการเอียงคอไปด้านข้าง", score: 1 },
+        { text: "กรณีที่มีทั้งการหมุนคอและการเอียงคอไปด้านข้าง", score: 2 }
+      ]},
+
+      // ขั้นตอนที่ 2: ลำตัว (2, 3)
+      { title: "ขั้นตอนที่ 2: การประเมินท่าทางของลำตัว (Trunk Posture)", options: [
+        { text: "ลำตัวตั้งตรง", score: 1 },
+        { text: "เอนลำตัวไปด้านหลัง", score: 2 },
+        { text: "เอนลำตัวไปด้านหน้า 0-20°", score: 2 },
+        { text: "เอนลำตัวไปด้านหน้า 20-60°", score: 3 },
+        { text: "เอนตัวไปด้านหน้ามากกว่า 60°", score: 4 }
+      ]},
+      { title: "ขั้นตอนที่ 2: คะแนนปรับเพิ่มของลำตัว (Trunk Adjustment)", options: [
+        { text: "ไม่มีการปรับเพิ่มคะแนน", score: 0 },
+        { text: "กรณีที่มีการหมุนลำตัว", score: 1 },
+        { text: "กรณีที่มีการเอียงลำตัวไปด้านข้าง", score: 1 },
+        { text: "กรณีที่มีทั้งการหมุนลำตัวและการเอียงลำตัวไปด้านข้าง", score: 2 }
+      ]},
+
+      // ขั้นตอนที่ 3: ขา (4, 5)
+      { title: "ขั้นตอนที่ 3: การประเมินท่าทางของขา (Leg Posture)", options: [
+        { text: "มีการลงน้ำหนักและยืนด้วยเท้าทั้งสองข้าง (ขาทั้งสองข้างยืนสมดุล)", score: 1 },
+        { text: "มีการลงน้ำหนักและยืนด้วยเท้าเพียงข้างเดียว (ขายืนไม่สมดุล)", score: 2 }
+      ]},
+      { title: "ขั้นตอนที่ 3: คะแนนปรับเพิ่มของขา (Leg Adjustment)", options: [
+        { text: "ไม่มีการปรับเพิ่มคะแนน (เข่างอน้อยกว่า 30°)", score: 0 },
+        { text: "กรณีที่มีการย่อเข่าทำมุม 30-60°", score: 1 },
+        { text: "กรณีที่มีการย่อเข่าทำมุมมากกว่า 60°", score: 2 }
+      ]},
+
+      // ขั้นตอนที่ 4: สรุปตาราง A (6)
+      { title: "ขั้นตอนที่ 4: สรุปผลที่ได้จากการประเมินท่าทางในขั้นตอนที่ 1-3 (Posture Score A)", options: [
+        { text: "นำคะแนนที่ได้จากการประเมินท่าทางในขั้นตอนที่ 1-3 มาหาค่าคะแนนการประเมินท่าทางกลุ่ม A (Posture Score A) จากตาราง A", score: 0 }
+      ]},
+
+      // ขั้นตอนที่ 5: แรงที่ใช้ (7, 8)
+      { title: "ขั้นตอนที่ 5: การประเมินแรงที่ใช้หรือภาระงาน (Load / Force)", options: [
+        { text: "แรงหรือภาระงานที่ใช้แรงน้อยกว่า 5 กิโลกรัม", score: 0 },
+        { text: "แรงหรือภาระงานที่ใช้อยู่ระหว่าง 5 - 10 กิโลกรัม", score: 1 },
+        { text: "แรงหรือภาระงานที่ใช้งานมากกว่า 10 กิโลกรัม", score: 2 }
+      ]},
+      { title: "ขั้นตอนที่ 5: คะแนนปรับเพิ่มแรงหรือภาระงาน (Force Adjustment)", options: [
+        { text: "ไม่มีการปรับเพิ่มคะแนน", score: 0 },
+        { text: "กรณีที่มีแรงเป็นแรงกระแทก หรือกระชากเร็วๆ", score: 1 }
+      ]},
+
+      // ขั้นตอนที่ 6: สรุปผลกลุ่ม A (9)
+      { title: "ขั้นตอนที่ 6: สรุปผลจากการประเมินท่าทางคอ ลำตัว และขา (คะแนนรวมกลุ่ม A)", options: [
+        { text: "จากคะแนนการประเมินท่าทางคอ ลำตัวและขาในกลุ่ม A ซึ่งได้มาจากขั้นตอนที่ 4 นำมารวมกับคะแนนในขั้นตอนที่ 5 จะได้เป็นคะแนนรวมของการประเมินในกลุ่ม A ซึ่งจะนำมาใช้ในการประเมินคะแนนรวมของวิธี REBA", score: 0 }
+      ]},
+
+      // ขั้นตอนที่ 7: แขนส่วนบน (10, 11)
+      { title: "ขั้นตอนที่ 7: การประเมินท่าทางของแขนส่วนบน (Upper Arm Posture)", options: [
+        { text: "เหยียดแขนไปทางด้านหลัง 20° หรือ ยกแขนไปด้านหน้า 20°", score: 1 },
+        { text: "เหยียดแขนไปด้านหลัง >20° หรือ ยกแขนไปด้านหน้า ในช่วง 20° - 45°", score: 2 },
+        { text: "ยกแขนไปด้านหน้าในช่วง 45° - 90°", score: 3 },
+        { text: "ยกแขนไปด้านหน้า >90°", score: 4 }
+      ]},
+      { title: "ขั้นตอนที่ 7: คะแนนปรับเพิ่ม/ลด ของแขนส่วนบน (Upper Arm Adjustment)", options: [
+        { text: "ไม่พบปัจจัยปรับเพิ่ม/ลดคะแนน", score: 0 },
+        { text: "กรณีที่มีการยกของไหล่", score: 1 },
+        { text: "กรณีที่มีการกางแขน", score: 1 },
+        { text: "กรณีที่มีการยกของไหล่ และกางแขนร่วมด้วย", score: 2 },
+        { text: "กรณีที่มีที่วางแขน หรือ สามารถพาดแขนได้", score: -1 }
+      ]},
+
+      // ขั้นตอนที่ 8: แขนส่วนล่าง (12)
+      { title: "ขั้นตอนที่ 8: การประเมินท่าทางของแขนส่วนล่าง (Lower Arm Posture)", options: [
+        { text: "แขนส่วนล่างงอขึ้นอยู่ในช่วง 60° - 100°", score: 1 },
+        { text: "แขนส่วนล่าง งอลง <60° หรือ งอขึ้น >100°", score: 2 }
+      ]},
+
+      // ขั้นตอนที่ 9: ข้อมือ (13, 14)
+      { title: "ขั้นตอนที่ 9: การประเมินท่าทางข้อมือ (Wrist Posture)", options: [
+        { text: "ข้อมือกระดกขึ้นหรือลงไม่เกิน 15°", score: 1 },
+        { text: "ข้อมือกระดกขึ้นหรือลง >15°", score: 2 }
+      ]},
+      { title: "ขั้นตอนที่ 9: คะแนนปรับเพิ่มของข้อมือ (Wrist Adjustment)", options: [
+        { text: "ไม่มีการปรับเพิ่มคะแนน", score: 0 },
+        { text: "กรณีข้อมือเบี่ยงเบนจากแนวกลาง หรือหมุนข้อมือ", score: 1 }
+      ]},
+
+      // ขั้นตอนที่ 10: สรุปผลตาราง B (15)
+      { title: "ขั้นตอนที่ 10: สรุปผลจากการประเมินท่าทางแขนส่วนบน แขนส่วนล่าง และข้อมือ (Posture Score B)", options: [
+        { text: "นำคะแนนที่ได้จากขั้นตอนที่ 7-9 มาหาค่าคะแนนรวมการประเมินท่าทางกลุ่ม B จากตาราง B", score: 0 }
+      ]},
+
+      // ขั้นตอนที่ 11: การจับยึดวัตถุ (16)
+      { title: "ขั้นตอนที่ 11: ประเมินการจับยึดวัตถุ (Coupling Score)", options: [
+        { text: "วัตถุจับยึดมีมือจับ ผู้ปฏิบัติสามารถจับยึดได้ถนัดมือสามารถกำได้รอบมือ", score: 0 },
+        { text: "วัตถุจับยึดมีมือจับ แต่ไม่เหมาะสม ผู้ปฏิบัติไม่สามารถกำได้รอบมือ", score: 1 },
+        { text: "ไม่มีมือจับ แต่มีจุดที่สามารถสอดนิ้วมือหรืองอนิ้วมือเพื่อจับยึดได้", score: 2 },
+        { text: "ไม่มีมือจับและวัตถุจับยึดได้ยาก เช่น เปลี่ยนรูปร่างได้ เป็นก้อนกลมใหญ่ ผิวลื่นมัน เป็นต้น", score: 3 }
+      ]},
+
+      // ขั้นตอนที่ 12: สรุปคะแนนรวมกลุ่ม B (17)
+      { title: "ขั้นตอนที่ 12: การสรุปคะแนนรวมในกลุ่ม B (Total Score Group B)", options: [
+        { text: "รวมคะแนนที่ได้จากขั้นตอนที่ 10-11 เพื่อใช้ในการหาค่าคะแนนสุดท้ายจากตาราง C ร่วมกับคะแนนกลุ่ม A", score: 0 }
+      ]},
+
+      // ขั้นตอนที่ 13: กิจกรรมการทำงาน (18)
+      { title: "ขั้นตอนที่ 13: การประเมินการเคลื่อนไหวและกิจกรรมของงาน (Activity Score)", options: [
+        { text: "ไม่พบปัจจัยกิจกรรมเสี่ยงเพิ่มเติม", score: 0 },
+        { text: "ร่างกายส่วนใดส่วนหนึ่งอยู่กับที่น่านกว่า 1 นาที", score: 1 },
+        { text: "มีการเคลื่อนไหวร่างกายส่วนใดส่วนหนึ่งซ้ำๆ มากกว่า 4 ครั้งต่อนาที", score: 1 },
+        { text: "มีการเปลี่ยนแปลงตำแหน่งท่าทางของร่างกายมากและเร็ว หรือมีการทรงตัวไม่ดี", score: 1 },
+        { text: "พบปัจจัยกิจกรรมเสี่ยงตั้งแต่ 2 ปัจจัยขึ้นไป", score: 2 }
+      ]},
+
+      // ขั้นตอนที่ 14: ตาราง C และสรุป REBA (19)
+      { title: "ขั้นตอนที่ 14: การหาค่าคะแนน C และการประมวลผล REBA สุทธิ (Final REBA Score & Table C)", options: [
+        { text: "การหาค่าคะแนน C จะได้มาจากตาราง C โดยนำค่าคะแนนประเมินรวมของกลุ่ม A (จากขั้นตอนที่ 6) และคะแนนประเมินรวมของกลุ่ม B (จากขั้นตอนที่ 12) มาอ่านค่าจากตาราง C", score: 0 }
+      ]}
+    ];
+
+    // ตาราง A
+    const tableA = [
+      [[1,2,3,4], [1,2,3,4], [3,3,5,6]], 
+      [[2,3,4,5], [3,4,5,6], [4,5,6,7]], 
+      [[2,4,5,6], [4,5,6,7], [5,6,7,8]], 
+      [[3,5,6,7], [5,6,7,8], [6,7,8,9]], 
+      [[4,6,7,8], [6,7,8,9], [7,8,9,9]]  
+    ];
+
+    // ตาราง B
+    const tableB = [
+      [[1,2,3], [1,2,3]],
+      [[1,2,3], [2,3,4]],
+      [[3,4,5], [4,5,5]],
+      [[4,5,5], [5,6,7]],
+      [[6,7,8], [7,8,8]],
+      [[7,8,8], [8,9,9]]
+    ];
+
+    // ตาราง C
+    const tableC = [
+      [1,1,1,2,3,3,4,5,6,7,7,7],
+      [1,2,2,3,4,4,5,6,6,7,7,8],
+      [2,3,3,3,4,5,6,7,7,8,8,8],
+      [3,4,4,4,5,6,7,8,8,9,9,9],
+      [4,4,4,5,6,7,8,8,9,9,9,9],
+      [6,6,6,7,8,8,9,9,10,10,10,10],
+      [7,7,7,8,9,9,9,10,10,11,11,11],
+      [8,8,8,9,10,10,10,10,10,11,11,11],
+      [9,9,9,10,10,10,11,11,11,12,12,12],
+      [10,10,10,11,11,11,11,12,12,12,12,12],
+      [11,11,11,11,12,12,12,12,12,12,12,12],
+      [12,12,12,12,12,12,12,12,12,12,12,12]
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const dateEl = document.getElementById('evaluator-date');
+      if (dateEl) dateEl.valueAsDate = new Date();
+    });
+
+    function showPage(pageId) {
+      document.getElementById('landing-page').classList.add('hidden');
+      document.getElementById('rapp-menu-page').classList.add('hidden');
+      document.getElementById('assessment-page').classList.add('hidden');
+      document.getElementById('result-page').classList.add('hidden');
+
+      document.getElementById(pageId).classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function startAssessment(mode, typeName, subCat) {
+      currentMode = mode;
+      currentCategory = subCat;
+      currentStep = 0;
+      userAnswers = {};
+
+      showPage('assessment-page');
+
+      document.getElementById('quiz-main-title').innerText = `แบบประเมิน ${mode}`;
+      document.getElementById('quiz-sub-type').innerText = typeName;
+
+      totalSteps = (mode === 'REBA') ? questionsREBA.length : questionsRAPP[subCat].length;
+      
+      renderStep();
+    }
+
+    function getCalculatedRebaAll() {
+      let neck = Math.min(3, Math.max(1, (questionsREBA[0].options[userAnswers[0]]?.score || 1) + (questionsREBA[1].options[userAnswers[1]]?.score || 0)));
+      let trunk = Math.min(5, Math.max(1, (questionsREBA[2].options[userAnswers[2]]?.score || 1) + (questionsREBA[3].options[userAnswers[3]]?.score || 0)));
+      let leg = Math.min(4, Math.max(1, (questionsREBA[4].options[userAnswers[4]]?.score || 1) + (questionsREBA[5].options[userAnswers[5]]?.score || 0)));
+
+      let postureA = tableA[trunk - 1][neck - 1][leg - 1] || 9;
+      let force = (questionsREBA[7].options[userAnswers[7]]?.score || 0) + (questionsREBA[8].options[userAnswers[8]]?.score || 0);
+      let totalA = Math.min(12, Math.max(1, postureA + force));
+
+      let upperArm = Math.min(6, Math.max(1, (questionsREBA[10].options[userAnswers[10]]?.score || 1) + (questionsREBA[11].options[userAnswers[11]]?.score || 0)));
+      let lowerArm = Math.min(2, Math.max(1, (questionsREBA[12].options[userAnswers[12]]?.score || 1)));
+      let wrist = Math.min(3, Math.max(1, (questionsREBA[13].options[userAnswers[13]]?.score || 1) + (questionsREBA[14].options[userAnswers[14]]?.score || 0)));
+
+      let postureB = tableB[upperArm - 1][lowerArm - 1][wrist - 1] || 1;
+      let coupling = (questionsREBA[16].options[userAnswers[16]]?.score || 0);
+      let totalB = Math.min(12, Math.max(1, postureB + coupling));
+
+      let activity = (questionsREBA[18].options[userAnswers[18]]?.score || 0);
+      let scoreC = tableC[totalA - 1][totalB - 1] || 11;
+      let finalReba = scoreC + activity;
+
+      return { postureA, force, totalA, upperArm, lowerArm, wrist, postureB, coupling, totalB, activity, scoreC, finalReba };
+    }
+
+    function renderStep() {
+      const qData = (currentMode === 'REBA') ? questionsREBA[currentStep] : questionsRAPP[currentCategory][currentStep];
+
+      const percent = Math.round(((currentStep + 1) / totalSteps) * 100);
+      document.getElementById('progress-text').innerText = `ข้อที่ ${currentStep + 1} จาก ${totalSteps}`;
+      document.getElementById('progress-percent').innerText = `${percent}%`;
+      document.getElementById('progress-bar').style.width = `${percent}%`;
+
+      document.getElementById('q-number').innerText = currentStep + 1;
+      document.getElementById('q-title').innerText = qData.title;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      qData.options.forEach((opt, idx) => {
+        const isSummaryStep = (currentMode === 'REBA' && (currentStep === 6 || currentStep === 9 || currentStep === 15 || currentStep === 17 || currentStep === 19));
+        const isChecked = userAnswers[currentStep] === idx || isSummaryStep;
+        if (isSummaryStep) {
+          userAnswers[currentStep] = 0; // auto select
+        }
+        const scoreSign = opt.score >= 0 ? `+${opt.score}` : `${opt.score}`;
+        const optHtml = `
+          <label class="option-card flex items-center p-4 border border-slate-200/90 rounded-2xl hover:bg-indigo-50/40 cursor-pointer transition group">
+            <input type="radio" name="current_q" value="${idx}" ${isChecked ? 'checked' : ''} onchange="selectOption(${idx})" class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+            <span class="ml-3.5 text-sm text-slate-700 font-medium group-hover:text-slate-900 leading-relaxed">${opt.text}</span>
+            <span class="ml-auto text-xs font-semibold text-slate-400 group-hover:text-indigo-600 shrink-0 pl-2">(${scoreSign} คะแนน)</span>
+          </label>
+        `;
+        container.insertAdjacentHTML('beforeend', optHtml);
+      });
+
+      // --- REBA Dynamic Table & Score Injection ---
+      if (currentMode === 'REBA') {
+        const scores = getCalculatedRebaAll();
+
+        // ขั้นตอนที่ 4 (Index 6)
+        if (currentStep === 6) {
+          const step4Html = `
+            <div class="mt-4 flex items-center border-2 border-slate-900 rounded-lg overflow-hidden shadow-sm text-sm font-bold max-w-md">
+              <div class="bg-amber-500 text-slate-950 px-4 py-2.5 flex-1 text-center font-extrabold">คะแนนท่าทาง กลุ่ม A</div>
+              <div class="bg-slate-300 text-slate-950 px-6 py-2.5 w-24 text-center text-lg font-black border-l-2 border-slate-900">${scores.postureA}</div>
+            </div>
+            <div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 overflow-x-auto">
+              <span class="text-xs font-bold text-slate-700">ตาราง A (Table A: Neck, Trunk, Leg Score)</span>
+              <table class="w-full text-center text-xs border-collapse border border-slate-300 bg-white">
+                <thead>
+                  <tr class="bg-sky-100 text-sky-900 font-bold border-b border-slate-300">
+                    <th rowspan="2" class="p-2 border-r border-slate-300 bg-slate-200">ตาราง A</th>
+                    <th colspan="12" class="p-1 border-b border-slate-300">คอ</th>
+                  </tr>
+                  <tr class="bg-sky-50 text-sky-900 border-b border-slate-300">
+                    <th colspan="4" class="p-1 border-r border-slate-300">1</th>
+                    <th colspan="4" class="p-1 border-r border-slate-300">2</th>
+                    <th colspan="4" class="p-1">3</th>
+                  </tr>
+                  <tr class="bg-emerald-100 text-emerald-900 font-semibold border-b border-slate-300">
+                    <td class="p-1 font-bold border-r border-slate-300 bg-emerald-200">ขา</td>
+                    <td class="p-1 border-r">1</td><td class="p-1 border-r">2</td><td class="p-1 border-r">3</td><td class="p-1 border-r border-slate-300">4</td>
+                    <td class="p-1 border-r">1</td><td class="p-1 border-r">2</td><td class="p-1 border-r">3</td><td class="p-1 border-r border-slate-300">4</td>
+                    <td class="p-1 border-r">1</td><td class="p-1 border-r">2</td><td class="p-1 border-r">3</td><td class="p-1">4</td>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr><td class="p-1 bg-pink-100 font-bold border-r border-slate-300 text-pink-900">ลำตัว 1</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1 border-r border-slate-300">4</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1 border-r border-slate-300">4</td><td class="p-1">3</td><td class="p-1">3</td><td class="p-1">5</td><td class="p-1">6</td></tr>
+                  <tr><td class="p-1 bg-pink-100 font-bold border-r border-slate-300 text-pink-900">ลำตัว 2</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1 border-r border-slate-300">5</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1 border-r border-slate-300">6</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td></tr>
+                  <tr><td class="p-1 bg-pink-100 font-bold border-r border-slate-300 text-pink-900">ลำตัว 3</td><td class="p-1">2</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1 border-r border-slate-300">6</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1 border-r border-slate-300">7</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">8</td></tr>
+                  <tr><td class="p-1 bg-pink-100 font-bold border-r border-slate-300 text-pink-900">ลำตัว 4</td><td class="p-1">3</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1 border-r border-slate-300">7</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1 border-r border-slate-300">8</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">9</td></tr>
+                  <tr><td class="p-1 bg-pink-100 font-bold border-r border-slate-300 text-pink-900">ลำตัว 5</td><td class="p-1">4</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1 border-r border-slate-300">8</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1 border-r border-slate-300">9</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">9</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', step4Html);
+        }
+
+        // ขั้นตอนที่ 6 (Index 9)
+        if (currentStep === 9) {
+          const step6Html = `
+            <div class="mt-4 flex items-center border-2 border-slate-900 rounded-lg overflow-hidden shadow-sm text-sm font-bold max-w-md">
+              <div class="bg-amber-500 text-slate-950 px-4 py-2.5 flex-1 text-center font-extrabold">คะแนนรวมของกลุ่ม A</div>
+              <div class="bg-slate-300 text-slate-950 px-6 py-2.5 w-24 text-center text-lg font-black border-l-2 border-slate-900">${scores.totalA}</div>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', step6Html);
+        }
+
+        // ขั้นตอนที่ 10 (Index 15) -> ตาราง B + คะแนนท่าทาง กลุ่ม B
+        if (currentStep === 15) {
+          const step10Html = `
+            <div class="mt-4 flex items-center border-2 border-slate-900 rounded-lg overflow-hidden shadow-sm text-sm font-bold max-w-md">
+              <div class="bg-amber-500 text-slate-950 px-4 py-2.5 flex-1 text-center font-extrabold">คะแนนท่าทาง กลุ่ม B</div>
+              <div class="bg-slate-300 text-slate-950 px-6 py-2.5 w-24 text-center text-lg font-black border-l-2 border-slate-900">${scores.postureB}</div>
+            </div>
+            <div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 overflow-x-auto">
+              <span class="text-xs font-bold text-slate-700">ตาราง B (Table B: Upper Arm, Lower Arm, Wrist Score)</span>
+              <table class="w-full text-center text-xs border-collapse border border-slate-300 bg-white">
+                <thead>
+                  <tr class="bg-orange-100 text-orange-950 font-bold border-b border-slate-300">
+                    <th rowspan="2" colspan="2" class="p-2 border-r border-slate-300 bg-slate-200">ตาราง B</th>
+                    <th colspan="6" class="p-1 border-b border-slate-300">แขนส่วนล่าง</th>
+                  </tr>
+                  <tr class="bg-orange-50 text-orange-950 border-b border-slate-300">
+                    <th colspan="3" class="p-1 border-r border-slate-300">1</th>
+                    <th colspan="3" class="p-1">2</th>
+                  </tr>
+                  <tr class="bg-yellow-100 text-yellow-950 font-semibold border-b border-slate-300">
+                    <td colspan="2" class="p-1 font-bold border-r border-slate-300 bg-yellow-200">ข้อมือ</td>
+                    <td class="p-1 border-r">1</td><td class="p-1 border-r">2</td><td class="p-1 border-r border-slate-300">3</td>
+                    <td class="p-1 border-r">1</td><td class="p-1 border-r">2</td><td class="p-1">3</td>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr><td rowspan="6" class="p-1 bg-indigo-100 font-bold border-r border-slate-300 text-indigo-900 [writing-mode:vertical-lr]">แขนส่วนบน</td><td class="p-1 bg-indigo-50 border-r border-slate-300 font-semibold">1</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1 border-r border-slate-300">3</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1">3</td></tr>
+                  <tr><td class="p-1 bg-indigo-50 border-r border-slate-300 font-semibold">2</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1 border-r border-slate-300">3</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1">4</td></tr>
+                  <tr><td class="p-1 bg-indigo-50 border-r border-slate-300 font-semibold">3</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1 border-r border-slate-300">5</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">5</td></tr>
+                  <tr><td class="p-1 bg-indigo-50 border-r border-slate-300 font-semibold">4</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1 border-r border-slate-300">5</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td></tr>
+                  <tr><td class="p-1 bg-indigo-50 border-r border-slate-300 font-semibold">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1 border-r border-slate-300">8</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">8</td></tr>
+                  <tr><td class="p-1 bg-indigo-50 border-r border-slate-300 font-semibold">6</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1 border-r border-slate-300">8</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">9</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', step10Html);
+        }
+
+        // ขั้นตอนที่ 12 (Index 17) -> คะแนนรวมของกลุ่ม B
+        if (currentStep === 17) {
+          const step12Html = `
+            <div class="mt-4 flex items-center border-2 border-slate-900 rounded-lg overflow-hidden shadow-sm text-sm font-bold max-w-md">
+              <div class="bg-amber-500 text-slate-950 px-4 py-2.5 flex-1 text-center font-extrabold">คะแนนรวมของกลุ่ม B</div>
+              <div class="bg-slate-300 text-slate-950 px-6 py-2.5 w-24 text-center text-lg font-black border-l-2 border-slate-900">${scores.totalB}</div>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', step12Html);
+        }
+
+        // ขั้นตอนที่ 14 (Index 19) -> คะแนน C + ตาราง C
+        if (currentStep === 19) {
+          const step14Html = `
+            <div class="mt-4 flex items-center border-2 border-slate-900 rounded-lg overflow-hidden shadow-sm text-sm font-bold max-w-md">
+              <div class="bg-amber-500 text-slate-950 px-4 py-2.5 flex-1 text-right sm:text-center font-extrabold pr-4 sm:pr-0">
+                คะแนน C
+              </div>
+              <div class="bg-slate-300 text-slate-950 px-6 py-2.5 w-28 text-center text-lg font-black border-l-2 border-slate-900">
+                ${scores.scoreC}
+              </div>
+            </div>
+
+            <div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 overflow-x-auto">
+              <span class="text-xs font-bold text-slate-700">ตาราง C (Table C: Score A vs Score B)</span>
+              <table class="w-full text-center text-[11px] border-collapse border border-slate-400 bg-white">
+                <thead>
+                  <tr class="bg-cyan-200 text-slate-900 font-bold border-b border-slate-400">
+                    <th rowspan="2" class="p-1 border-r border-slate-400 bg-slate-300">ตาราง C</th>
+                    <th colspan="12" class="p-1">คะแนนกลุ่ม B</th>
+                  </tr>
+                  <tr class="bg-cyan-100 text-slate-900 font-semibold border-b border-slate-400">
+                    <td class="p-1 border-r">1</td><td class="p-1 border-r">2</td><td class="p-1 border-r">3</td><td class="p-1 border-r">4</td><td class="p-1 border-r">5</td><td class="p-1 border-r">6</td><td class="p-1 border-r">7</td><td class="p-1 border-r">8</td><td class="p-1 border-r">9</td><td class="p-1 border-r">10</td><td class="p-1 border-r">11</td><td class="p-1">12</td>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-300 font-medium">
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">1</td><td class="p-1">1</td><td class="p-1">1</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">7</td><td class="p-1">7</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">2</td><td class="p-1">1</td><td class="p-1">2</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">7</td><td class="p-1">8</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">3</td><td class="p-1">2</td><td class="p-1">3</td><td class="p-1">3</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">8</td><td class="p-1">8</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">4</td><td class="p-1">3</td><td class="p-1">4</td><td class="p-1">4</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">9</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">5</td><td class="p-1">4</td><td class="p-1">4</td><td class="p-1">4</td><td class="p-1">5</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">9</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">6</td><td class="p-1">6</td><td class="p-1">6</td><td class="p-1">6</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">7</td><td class="p-1">7</td><td class="p-1">7</td><td class="p-1">7</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">8</td><td class="p-1">8</td><td class="p-1">8</td><td class="p-1">8</td><td class="p-1">9</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">9</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">9</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">10</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">11</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">11</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td></tr>
+                  <tr><td class="p-1 bg-fuchsia-100 font-bold border-r border-slate-400">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td><td class="p-1">12</td>
+                </tbody>
+              </table>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', step14Html);
+        }
+      }
+
+      document.getElementById('btn-prev').disabled = (currentStep === 0);
+
+      const nextBtn = document.getElementById('btn-next');
+      if (currentStep === totalSteps - 1) {
+        nextBtn.className = "px-7 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer";
+        nextBtn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <span>ประมวลผลและบันทึกข้อมูล</span>`;
+      } else {
+        nextBtn.className = "px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer";
+        nextBtn.innerHTML = `<span>ถัดไป</span> <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>`;
+      }
+    }
+
+    function selectOption(index) {
+      userAnswers[currentStep] = index;
+    }
+
+    function calculateTotalScore() {
+      if (currentMode === 'REBA') {
+        const scores = getCalculatedRebaAll();
+        return scores.finalReba;
+      }
+
+      let total = 0;
+      const qList = questionsRAPP[currentCategory];
+      for (let i = 0; i < totalSteps; i++) {
+        const selectedIdx = userAnswers[i];
+        if (selectedIdx !== undefined && qList[i] && qList[i].options[selectedIdx]) {
+          total += qList[i].options[selectedIdx].score;
+        }
+      }
+      return total;
+    }
+
+    function evaluateRisk(mode, totalScore) {
+      if (mode === 'RAPP') {
+        if (totalScore <= 8) {
+          return {
+            level: 'ความเสี่ยงต่ำ (Low Risk - Green Band)',
+            code: 'low',
+            recommendation: 'สภาพงานมีความปลอดภัยและเหมาะสม ควรควบคุมและบำรุงรักษาสภาพงานให้เป็นมาตรฐานต่อไป'
+          };
+        } else if (totalScore <= 14) {
+          return {
+            level: 'ความเสี่ยงปานกลาง (Medium Risk - Amber Band)',
+            code: 'medium',
+            recommendation: 'ควรมีการเฝ้าระวังอย่างใกล้ชิด และวางแผนปรับปรุงสภาพการทำงานเพื่อลดแรงออกหรือปรับสภาพพื้นผิว'
+          };
+        } else {
+          return {
+            level: 'ความเสี่ยงสูง (High Risk - Red Band)',
+            code: 'high',
+            recommendation: 'จำเป็นต้องดำเนินการแก้ไขปรับปรุงทันที เช่น จัดหาเครื่องทุ่นแรง ปรับลดน้ำหนักวัตถุ หรือปรับปรุงเส้นทางเคลื่อนย้าย'
+          };
+        }
+      } else {
+        // REBA Risk Evaluation ตามมาตรฐานสากล
+        if (totalScore <= 1) {
+          return {
+            level: 'ความเสี่ยงน้อยมาก',
+            code: 'low',
+            recommendation: 'ความเสี่ยงน้อยมาก: สภาพการทำงานมีความเหมาะสม ไม่จำเป็นต้องดำเนินการแก้ไขปรับปรุง'
+          };
+        } else if (totalScore <= 3) {
+          return {
+            level: 'ความเสี่ยงน้อย ยังต้องมีการปรับปรุง',
+            code: 'low',
+            recommendation: 'ความเสี่ยงน้อย: ท่าทางการทำงานอยู่ในเกณฑ์ยอมรับได้ แต่ยังต้องมีการปรับปรุงหรือเฝ้าระวังต่อเนื่อง'
+          };
+        } else if (totalScore <= 7) {
+          return {
+            level: 'ความเสี่ยงปานกลาง ควรวิเคราะห์เพิ่มเติมและควรได้รับการปรับปรุง',
+            code: 'medium',
+            recommendation: 'ความเสี่ยงปานกลาง: ควรทำการวิเคราะห์ท่าทางการทำงานเพิ่มเติม และควรวางแผนได้รับการปรับปรุงแก้ไขสภาพการทำงาน'
+          };
+        } else if (totalScore <= 10) {
+          return {
+            level: 'ความเสี่ยงสูง ควรวิเคราะห์เพิ่มเติมและควรรีบปรับปรุง',
+            code: 'high',
+            recommendation: 'ความเสี่ยงสูง: ควรวิเคราะห์อันตรายเพิ่มเติมและควรรีบปรับปรุงแก้ไขท่าทางการทำงานโดยเร็ว'
+          };
+        } else {
+          return {
+            level: 'ความเสี่ยงสูงมาก ควรปรับปรุงทันที',
+            code: 'high',
+            recommendation: 'ความเสี่ยงสูงมาก: ต้องปรับปรุงทันที โดยพิจารณาหยุดหรือจำกัดการทำงานในท่าทางเสี่ยงจนกว่าจะมีมาตรการควบคุมที่เหมาะสม วิเคราะห์อันตรายและสาเหตุเชิงลึก ปรับออกแบบสถานีงานหรือกระบวนการทำงานเพื่อลดท่าทางฝืนธรรมชาติ ลดแรงและการทำงานซ้ำ ใช้อุปกรณ์ช่วยทุ่นแรงหรือออกแบบเครื่องมือให้เหมาะสม กำหนดมาตรการควบคุมและผู้รับผิดชอบให้ชัดเจน พร้อมประเมิน REBA ซ้ำหลังปรับปรุง'
+          };
+        }
+      }
+    }
+
+    function renderResultPage(payload) {
+      document.getElementById('res-evaluator-name').innerText = payload.evaluatorName || '-';
+      document.getElementById('res-category-type').innerText = payload.equipmentType || '-';
+      document.getElementById('res-evaluator-date').innerText = document.getElementById('evaluator-date').value || '-';
+      document.getElementById('res-evaluator-location').innerText = payload.location || '-';
+      document.getElementById('res-evaluator-job').innerText = payload.jobDetail || '-';
+
+      document.getElementById('res-yellow-score').innerText = payload.totalScore;
+      document.getElementById('res-yellow-text').innerText = payload.riskLevel;
+      document.getElementById('res-recommendation-text').innerText = payload.recommendation;
+
+      showPage('result-page');
+    }
+
+    function nextQuestion() {
+      if (currentStep < totalSteps - 1) {
+        currentStep++;
+        renderStep();
+      } else {
+        const name = document.getElementById('evaluator-name').value.trim();
+        if (!name) {
+          alert('กรุณากรอก "ชื่อผู้ประเมิน" ก่อนประมวลผลรายงาน');
+          document.getElementById('evaluator-name').focus();
+          return;
+        }
+
+        const totalScore = calculateTotalScore();
+        const evalResult = evaluateRisk(currentMode, totalScore);
+        const subTypeTitle = document.getElementById('quiz-sub-type').innerText;
+
+        const payload = {
+          mode: currentMode,
+          evaluatorName: name,
+          location: document.getElementById('evaluator-location').value.trim(),
+          jobDetail: document.getElementById('evaluator-job').value.trim(),
+          equipmentType: subTypeTitle,
+          totalScore: totalScore,
+          riskLevel: evalResult.level,
+          riskCode: evalResult.code,
+          recommendation: evalResult.recommendation
+        };
+
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              renderResultPage(payload);
+            })
+            .withFailureHandler(function(err) {
+              renderResultPage(payload);
+            })
+            .saveAssessment(payload);
+        } else {
+          renderResultPage(payload);
+        }
+      }
+    }
+
+    function prevQuestion() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderStep();
+      }
+    }
+
+    function goHome() {
+      showPage('landing-page');
+    }
+  </script>
+</body>
+</html>
