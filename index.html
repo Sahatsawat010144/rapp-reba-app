@@ -1126,17 +1126,14 @@
     }
 
     function sendViaFetch(payload) {
+      // แปลงข้อมูลเป็นข้อความ และส่งผ่าน Image Beacon (ไม่ติด CORS)
       const url = WEB_APP_URL + "?data=" + encodeURIComponent(JSON.stringify(payload));
-      fetch(url, {
-        method: 'GET',
-        mode: 'no-cors'
-      }).then(() => {
-        renderResultPage(payload);
-      }).catch(err => {
-        renderResultPage(payload);
-      });
+      const beacon = new Image();
+      beacon.src = url;
+      
+      // แสดงหน้าสรุปผลทันที
+      renderResultPage(payload);
     }
-
     function nextQuestion() {
       if (currentStep < totalSteps - 1) {
         currentStep++;
