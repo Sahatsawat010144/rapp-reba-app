@@ -421,6 +421,7 @@
     // URL Web App ของ Google Apps Script
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrfVvQG07ZSrBxU-qTRbgipqmw1kzoXnHb_DGCFPdVbkTDvPtbI2mh5CY7-4rC5t1Ljw/exec";
 
+    let isSubmitting = false; // ตัวแปรสำหรับล็อกปุ่มป้องกันกดซ้ำ
     let currentMode = 'RAPP';
     let currentCategory = 'small';
     let currentStep = 0;
@@ -511,8 +512,8 @@
       ]},
       { title: "ข้อที่ 4: B-2 ท่าทางการทำงาน - ตำแหน่งของมือ (Hand Position)", options: [
         { text: "มืออยู่ระหว่างระดับสะโพกและไหล่", score: 0 },
-        { text: "มืออยู่ต่ำกว่าระดับสะโพก", score: 1 },
-        { text: "มืออยู่ด้านหลังหรือด้านข้างลำตัวหรือสูงกว่าระดับไหล่", score: 2 }
+        { text: "มืออยู่ต่ำกว่าระดับสะโพก", score: 3 },
+        { text: "มืออยู่ด้านหลังหรือด้านข้างลำตัวหรือสูงกว่าระดับไหล่", score: 6 }
       ]},
       { title: "ข้อที่ 5: B-3 ลักษณะการจับ (Hand Grip)", options: [
         { text: "มีที่จับหรือบริเวณสำหรับจับที่ช่วยให้สามารถจับได้อย่างมั่นคง", score: 0 },
@@ -753,6 +754,7 @@
       currentCategory = subCat;
       currentStep = 0;
       userAnswers = {};
+      isSubmitting = false;
 
       showPage('assessment-page');
 
@@ -822,12 +824,15 @@
       document.getElementById('btn-prev').disabled = (currentStep === 0);
 
       const nextBtn = document.getElementById('btn-next');
-      if (currentStep === totalSteps - 1) {
-        nextBtn.className = "px-7 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer";
-        nextBtn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <span>ประมวลผลและบันทึกข้อมูล</span>`;
-      } else {
-        nextBtn.className = "px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer";
-        nextBtn.innerHTML = `<span>ถัดไป</span> <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>`;
+      if (nextBtn) {
+        nextBtn.disabled = false;
+        if (currentStep === totalSteps - 1) {
+          nextBtn.className = "px-7 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer";
+          nextBtn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> <span>ประมวลผลและบันทึกข้อมูล</span>`;
+        } else {
+          nextBtn.className = "px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition flex items-center shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer";
+          nextBtn.innerHTML = `<span>ถัดไป</span> <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>`;
+        }
       }
     }
 
@@ -922,8 +927,16 @@
       showPage('result-page');
     }
 
-    // ฟังก์ชันยิงข้อมูลข้ามไปยัง Google Apps Script
     function sendViaFetch(payload) {
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      const nextBtn = document.getElementById('btn-next');
+      if (nextBtn) {
+        nextBtn.disabled = true;
+        nextBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> <span>กำลังบันทึกข้อมูล...</span>`;
+      }
+
       fetch(WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -932,8 +945,10 @@
         },
         body: JSON.stringify(payload)
       }).then(() => {
+        isSubmitting = false;
         renderResultPage(payload);
       }).catch(err => {
+        isSubmitting = false;
         renderResultPage(payload);
       });
     }
