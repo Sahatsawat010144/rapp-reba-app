@@ -613,8 +613,7 @@
       { title: "ขั้นตอนที่ 1: คะแนนปรับเพิ่มของคอ (Neck Adjustment)", options: [
         { text: "ไม่มีการปรับเพิ่มคะแนน", score: 0 },
         { text: "กรณีที่มีการหมุนคอ", score: 1 },
-        { text: "กรณีที่มีการเอียงคอไปด้านข้าง", score: 1 },
-        { text: "กรณีที่มีทั้งการหมุนคอและการเอียงคอไปด้านข้าง", score: 2 }
+        { text: "กรณีที่มีการเอียงคอไปด้านข้าง", score: 1 }
       ]},
       { title: "ขั้นตอนที่ 2: การประเมินท่าทางของลำตัว (Trunk Posture)", options: [
         { text: "ลำตัวตั้งตรง", score: 1 },
@@ -626,8 +625,7 @@
       { title: "ขั้นตอนที่ 2: คะแนนปรับเพิ่มของลำตัว (Trunk Adjustment)", options: [
         { text: "ไม่มีการปรับเพิ่มคะแนน", score: 0 },
         { text: "กรณีที่มีการหมุนลำตัว", score: 1 },
-        { text: "กรณีที่มีการเอียงลำตัวไปด้านข้าง", score: 1 },
-        { text: "กรณีที่มีทั้งการหมุนลำตัวและการเอียงลำตัวไปด้านข้าง", score: 2 }
+        { text: "กรณีที่มีการเอียงลำตัวไปด้านข้าง", score: 1 }
       ]},
       { title: "ขั้นตอนที่ 3: การประเมินท่าทางของขา (Leg Posture)", options: [
         { text: "มีการลงน้ำหนักและยืนด้วยเท้าทั้งสองข้าง (ขาทั้งสองข้างยืนสมดุล)", score: 1 },
@@ -790,6 +788,155 @@
       return { postureA, force, totalA, upperArm, lowerArm, wrist, postureB, coupling, totalB, activity, scoreC, finalReba };
     }
 
+    function generateTableAHTML(calc) {
+      let neck = Math.min(3, Math.max(1, (questionsREBA[0].options[userAnswers[0]]?.score || 1) + (questionsREBA[1].options[userAnswers[1]]?.score || 0)));
+      let trunk = Math.min(5, Math.max(1, (questionsREBA[2].options[userAnswers[2]]?.score || 1) + (questionsREBA[3].options[userAnswers[3]]?.score || 0)));
+      let leg = Math.min(4, Math.max(1, (questionsREBA[4].options[userAnswers[4]]?.score || 1) + (questionsREBA[5].options[userAnswers[5]]?.score || 0)));
+
+      let rowsHtml = '';
+      for (let t = 1; t <= 5; t++) {
+        let colsHtml = '';
+        for (let n = 1; n <= 3; n++) {
+          for (let l = 1; l <= 4; l++) {
+            const scoreVal = tableA[t-1][n-1][l-1];
+            const isMatch = (t === trunk && n === neck && l === leg);
+            const bgClass = isMatch ? 'bg-amber-300 font-extrabold text-indigo-950 scale-105 border-2 border-indigo-700' : 'bg-white text-slate-700';
+            colsHtml += `<td class="p-1.5 border border-slate-300 text-center ${bgClass}">${scoreVal}</td>`;
+          }
+        }
+        rowsHtml += `
+          <tr>
+            <td class="p-1.5 border border-slate-300 font-bold bg-slate-100 text-slate-800 text-center">Trunk ${t}</td>
+            ${colsHtml}
+          </tr>
+        `;
+      }
+
+      return `
+        <div class="mt-4 overflow-x-auto border border-indigo-200 rounded-2xl bg-indigo-50/50 p-4 shadow-sm">
+          <div class="text-xs font-bold text-indigo-900 mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-table mr-1.5 text-indigo-600"></i> ตาราง A: คะแนนประเมินท่าทาง (Posture Score A)</span>
+            <span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-md font-semibold">คะแนนที่ได้: ${calc.postureA}</span>
+          </div>
+          <table class="w-full text-xs border-collapse border border-slate-300 bg-white rounded-lg overflow-hidden">
+            <thead>
+              <tr class="bg-indigo-600 text-white font-bold border-b border-indigo-700">
+                <th rowspan="2" class="p-2 border border-indigo-500 w-20">Trunk (ลำตัว)</th>
+                <th colspan="4" class="p-1.5 border border-indigo-500">Neck 1 (คอ 0-20°)</th>
+                <th colspan="4" class="p-1.5 border border-indigo-500">Neck 2 (คอ >20°)</th>
+                <th colspan="4" class="p-1.5 border border-indigo-500">Neck 3 (เงยคอ)</th>
+              </tr>
+              <tr class="bg-indigo-100 text-indigo-900 font-semibold border-b border-slate-300">
+                <th class="p-1 border border-slate-300">Leg 1</th><th class="p-1 border border-slate-300">Leg 2</th><th class="p-1 border border-slate-300">Leg 3</th><th class="p-1 border border-slate-300">Leg 4</th>
+                <th class="p-1 border border-slate-300">Leg 1</th><th class="p-1 border border-slate-300">Leg 2</th><th class="p-1 border border-slate-300">Leg 3</th><th class="p-1 border border-slate-300">Leg 4</th>
+                <th class="p-1 border border-slate-300">Leg 1</th><th class="p-1 border border-slate-300">Leg 2</th><th class="p-1 border border-slate-300">Leg 3</th><th class="p-1 border border-slate-300">Leg 4</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function generateTableBHTML(calc) {
+      let upperArm = Math.min(6, Math.max(1, (questionsREBA[10].options[userAnswers[10]]?.score || 1) + (questionsREBA[11].options[userAnswers[11]]?.score || 0)));
+      let lowerArm = Math.min(2, Math.max(1, (questionsREBA[12].options[userAnswers[12]]?.score || 1)));
+      let wrist = Math.min(3, Math.max(1, (questionsREBA[13].options[userAnswers[13]]?.score || 1) + (questionsREBA[14].options[userAnswers[14]]?.score || 0)));
+
+      let rowsHtml = '';
+      for (let u = 1; u <= 6; u++) {
+        let colsHtml = '';
+        for (let l = 1; l <= 2; l++) {
+          for (let w = 1; w <= 3; w++) {
+            const scoreVal = tableB[u-1][l-1][w-1];
+            const isMatch = (u === upperArm && l === lowerArm && w === wrist);
+            const bgClass = isMatch ? 'bg-amber-300 font-extrabold text-indigo-950 scale-105 border-2 border-indigo-700' : 'bg-white text-slate-700';
+            colsHtml += `<td class="p-1.5 border border-slate-300 text-center ${bgClass}">${scoreVal}</td>`;
+          }
+        }
+        rowsHtml += `
+          <tr>
+            <td class="p-1.5 border border-slate-300 font-bold bg-slate-100 text-slate-800 text-center">Upper Arm ${u}</td>
+            ${colsHtml}
+          </tr>
+        `;
+      }
+
+      return `
+        <div class="mt-4 overflow-x-auto border border-indigo-200 rounded-2xl bg-indigo-50/50 p-4 shadow-sm">
+          <div class="text-xs font-bold text-indigo-900 mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-table mr-1.5 text-indigo-600"></i> ตาราง B: คะแนนประเมินท่าทาง (Posture Score B)</span>
+            <span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-md font-semibold">คะแนนที่ได้: ${calc.postureB}</span>
+          </div>
+          <table class="w-full text-xs border-collapse border border-slate-300 bg-white rounded-lg overflow-hidden">
+            <thead>
+              <tr class="bg-indigo-600 text-white font-bold border-b border-indigo-700">
+                <th rowspan="2" class="p-2 border border-indigo-500 w-28">Upper Arm (แขนบน)</th>
+                <th colspan="3" class="p-1.5 border border-indigo-500">Lower Arm 1 (แขนล่าง 60-100°)</th>
+                <th colspan="3" class="p-1.5 border border-indigo-500">Lower Arm 2 (แขนล่าง &lt;60° หรือ &gt;100°)</th>
+              </tr>
+              <tr class="bg-indigo-100 text-indigo-900 font-semibold border-b border-slate-300">
+                <th class="p-1 border border-slate-300">Wrist 1</th><th class="p-1 border border-slate-300">Wrist 2</th><th class="p-1 border border-slate-300">Wrist 3</th>
+                <th class="p-1 border border-slate-300">Wrist 1</th><th class="p-1 border border-slate-300">Wrist 2</th><th class="p-1 border border-slate-300">Wrist 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function generateTableCHTML(calc) {
+      let rowsHtml = '';
+      for (let a = 1; a <= 12; a++) {
+        let colsHtml = '';
+        for (let b = 1; b <= 12; b++) {
+          const scoreVal = tableC[a-1][b-1];
+          const isMatch = (a === calc.totalA && b === calc.totalB);
+          const bgClass = isMatch ? 'bg-amber-300 font-extrabold text-indigo-950 scale-105 border-2 border-indigo-700' : 'bg-white text-slate-700';
+          colsHtml += `<td class="p-1 border border-slate-300 text-center ${bgClass}">${scoreVal}</td>`;
+        }
+        rowsHtml += `
+          <tr>
+            <td class="p-1 border border-slate-300 font-bold bg-slate-100 text-slate-800 text-center">${a}</td>
+            ${colsHtml}
+          </tr>
+        `;
+      }
+
+      let headerColsHtml = '';
+      for (let b = 1; b <= 12; b++) {
+        headerColsHtml += `<th class="p-1 border border-slate-300">${b}</th>`;
+      }
+
+      return `
+        <div class="mt-4 overflow-x-auto border border-indigo-200 rounded-2xl bg-indigo-50/50 p-4 shadow-sm">
+          <div class="text-xs font-bold text-indigo-900 mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-table mr-1.5 text-indigo-600"></i> ตาราง C: การหาค่าคะแนน C (Table C)</span>
+            <span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-md font-semibold">Score C: ${calc.scoreC} | REBA สุทธิ: ${calc.finalReba}</span>
+          </div>
+          <table class="w-full text-xs border-collapse border border-slate-300 bg-white rounded-lg overflow-hidden">
+            <thead>
+              <tr class="bg-indigo-600 text-white font-bold border-b border-indigo-700">
+                <th rowspan="2" class="p-2 border border-indigo-500 w-16">Score A</th>
+                <th colspan="12" class="p-1.5 border border-indigo-500">Score B</th>
+              </tr>
+              <tr class="bg-indigo-100 text-indigo-900 font-semibold border-b border-slate-300">
+                ${headerColsHtml}
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
     function renderStep() {
       const qData = (currentMode === 'REBA') ? questionsREBA[currentStep] : questionsRAPP[currentCategory][currentStep];
 
@@ -804,22 +951,47 @@
       const container = document.getElementById('options-container');
       container.innerHTML = '';
 
+      const isSummaryStep = (currentMode === 'REBA' && (currentStep === 6 || currentStep === 9 || currentStep === 15 || currentStep === 17 || currentStep === 19));
+
       qData.options.forEach((opt, idx) => {
-        const isSummaryStep = (currentMode === 'REBA' && (currentStep === 6 || currentStep === 9 || currentStep === 15 || currentStep === 17 || currentStep === 19));
         const isChecked = userAnswers[currentStep] === idx || isSummaryStep;
         if (isSummaryStep) {
           userAnswers[currentStep] = 0;
         }
+
         const scoreSign = opt.score >= 0 ? `+${opt.score}` : `${opt.score}`;
+        const scoreBadge = isSummaryStep ? '' : `<span class="ml-auto text-xs font-semibold text-slate-400 group-hover:text-indigo-600 shrink-0 pl-2">(${scoreSign} คะแนน)</span>`;
+
+        let displayText = opt.text;
+        if (currentMode === 'REBA') {
+          const calc = getCalculatedRebaAll();
+          if (currentStep === 6) displayText = `ผลการคำนวณ Posture Score A = ${calc.postureA} (ดูตาราง A ประกอบด้านล่าง)`;
+          else if (currentStep === 9) displayText = `คะแนนรวมกลุ่ม A (Posture Score A ${calc.postureA} + Force ${calc.force}) = ${calc.totalA}`;
+          else if (currentStep === 15) displayText = `ผลการคำนวณ Posture Score B = ${calc.postureB} (ดูตาราง B ประกอบด้านล่าง)`;
+          else if (currentStep === 17) displayText = `คะแนนรวมกลุ่ม B (Posture Score B ${calc.postureB} + Coupling ${calc.coupling}) = ${calc.totalB}`;
+          else if (currentStep === 19) displayText = `ผลการคำนวณ Score C = ${calc.scoreC} (เมื่อรวม Activity +${calc.activity} จะได้คะแนน REBA สุทธิ = ${calc.finalReba})`;
+        }
+
         const optHtml = `
           <label class="option-card flex items-center p-4 border border-slate-200/90 rounded-2xl hover:bg-indigo-50/40 cursor-pointer transition group">
             <input type="radio" name="current_q" value="${idx}" ${isChecked ? 'checked' : ''} onchange="selectOption(${idx})" class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
-            <span class="ml-3.5 text-sm text-slate-700 font-medium group-hover:text-slate-900 leading-relaxed">${opt.text}</span>
-            <span class="ml-auto text-xs font-semibold text-slate-400 group-hover:text-indigo-600 shrink-0 pl-2">(${scoreSign} คะแนน)</span>
+            <span class="ml-3.5 text-sm text-slate-700 font-medium group-hover:text-slate-900 leading-relaxed">${displayText}</span>
+            ${scoreBadge}
           </label>
         `;
         container.insertAdjacentHTML('beforeend', optHtml);
       });
+
+      if (currentMode === 'REBA') {
+        const calc = getCalculatedRebaAll();
+        if (currentStep === 6 || currentStep === 9) {
+          container.insertAdjacentHTML('beforeend', generateTableAHTML(calc));
+        } else if (currentStep === 15 || currentStep === 17) {
+          container.insertAdjacentHTML('beforeend', generateTableBHTML(calc));
+        } else if (currentStep === 19) {
+          container.insertAdjacentHTML('beforeend', generateTableCHTML(calc));
+        }
+      }
 
       document.getElementById('btn-prev').disabled = (currentStep === 0);
 
